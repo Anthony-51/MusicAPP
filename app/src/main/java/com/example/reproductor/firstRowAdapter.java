@@ -1,0 +1,42 @@
+package com.example.reproductor;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+public class firstRowAdapter extends RecyclerView.Adapter<firstRowAdapter.ViewHolder> {
+
+    public firstRowAdapter() {
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_main,parent,false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    }
+
+    @Override
+    public int getItemCount() {
+        return 6;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView image;
+        TextView textView;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            image = itemView.findViewById(R.id.imageRecycler);
+            textView = itemView.findViewById(R.id.textRecycler);
+        }
+    }
+}
