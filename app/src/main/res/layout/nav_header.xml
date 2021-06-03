@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:background="@drawable/korwa"
+    android:orientation="vertical"
+    android:padding="20dp"
+    >
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profile_image"
+        android:layout_width="200px"
+        android:layout_height="200px"
+        android:src="@drawable/ainaaiba"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Aina Aiba"
+        android:textColor="@color/white"
+        android:layout_marginTop="5dp"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="aiai@gmail.com"
+        android:textSize="15dp"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/white"
+        />
+</LinearLayout>
