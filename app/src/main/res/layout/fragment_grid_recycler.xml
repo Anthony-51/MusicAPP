@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".gridFragmentRecycler">
+    tools:context=".Fragments.gridFragmentRecycler">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -14,9 +14,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Recomendados"
-            android:textSize="30dp"
-            android:layout_marginBottom="30px"/>
+            android:text="@string/recommended"
+            android:textSize="28sp"
+            android:layout_marginBottom="15dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/firstRown"
