@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         changeFragment(new gridFragmentRecycler());
 
         binding.buttonNav.setOnNavigationItemSelectedListener(this);
