@@ -3,22 +3,28 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="10dp">
+    android:padding="12dp"
+    android:background="@drawable/style_border_fragment_artist"
+    android:layout_margin="3dp"
+    >
+
     <ImageView
         android:id="@+id/first_image"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="135dp"
+        android:layout_height="135dp"
+        android:background="@drawable/style_img_border"
         android:src="@drawable/ainaaiba"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
     <TextView
         android:id="@+id/title_artist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/artist"
         android:layout_marginTop="18dp"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@+id/first_image"
@@ -27,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/artist"
-        android:textSize="15sp"
+        android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@+id/title_artist"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/first_image"
@@ -35,8 +41,8 @@
 
     <ImageView
         android:id="@+id/second_image"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="135dp"
+        android:layout_height="135dp"
         android:src="@drawable/ainaaiba"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

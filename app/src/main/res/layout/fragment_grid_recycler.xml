@@ -12,16 +12,75 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
+            android:id="@+id/title_recommended"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#000000"
+            android:padding="10dp"
             android:text="@string/recommended"
+            android:textColor="#ffffff"
             android:textSize="28sp"
-            android:layout_marginBottom="15dp"/>
+            android:textStyle="bold"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/firstRown"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:padding="10dp"/>
+
+        <TextView
+            android:id="@+id/title_favorite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#000000"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/homeFavorites"
+            android:textColor="#ffffff"
+            android:textSize="28sp"
+            android:textStyle="bold"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/secondRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"/>
+
+        <TextView
+            android:id="@+id/title_artist_recommended"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#000000"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/homeArtistRecommended"
+            android:textColor="#ffffff"
+            android:textSize="28sp"
+            android:textStyle="bold"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/thirdRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"/>
+
+        <TextView
+            android:id="@+id/title_songs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#000000"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/homeSongs"
+            android:textColor="#ffffff"
+            android:textSize="28sp"
+            android:textStyle="bold"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fourthRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"/>
 
     </LinearLayout>
 

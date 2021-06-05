@@ -1,13 +1,20 @@
 <resources>
     <string name="app_name">Reproductor</string>
-    <string name="open">Open</string>
-    <string name="close">Close</string>
+
+    <!--Titles-->
     <string name="recommended">Recomendado</string>
     <string name="recent_activity">Actividad Reciente</string>
     <string name="song_likes">Canciones que te gustan</string>
+    <string name="description">Descripcion</string>
+    <string name="homeFavorites">Favoritos</string>
+    <string name="homeArtistRecommended">Artistas Recomendados</string>
+    <string name="homeSongs">Canciones Similares</string>
+
+
+    <string name="open">Open</string>
+    <string name="close">Close</string>
     <string name="artist">Aina Aiba</string>
     <string name="song">Black Shout</string>
-    <string name="description">Descripcion</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

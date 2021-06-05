@@ -1,33 +1,52 @@
 package com.example.reproductor.Fragments;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.example.reproductor.R;
+import com.example.reproductor.Adapters.ArtistRecommendedAdapter;
+import com.example.reproductor.Adapters.FavoriteAdapter;
+import com.example.reproductor.Adapters.SongHomeAdapter;
 import com.example.reproductor.Adapters.firstRowAdapter;
 import com.example.reproductor.databinding.FragmentGridRecyclerBinding;
 
 public class gridFragmentRecycler extends Fragment {
     private FragmentGridRecyclerBinding binding;
-    private RecyclerView.LayoutManager gridLayout;
+    private RecyclerView.LayoutManager firstGridLayout,secondGridLayout, thirdGridLayout,fourthGridLayout;
     private firstRowAdapter rowAdapter;
+    private FavoriteAdapter favoriteAdapter;
+    private ArtistRecommendedAdapter artistRecommended;
+    private SongHomeAdapter songAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentGridRecyclerBinding.inflate(inflater, container, false);
-        gridLayout = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);
-        binding.firstRown.setLayoutManager(gridLayout);
+        firstGridLayout = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);
+        secondGridLayout = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);
+        thirdGridLayout = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);
+        fourthGridLayout = new GridLayoutManager(getContext(),1,LinearLayoutManager.HORIZONTAL,false);
+
+        binding.firstRown.setLayoutManager(firstGridLayout);
+        binding.secondRow.setLayoutManager(secondGridLayout);
+        binding.thirdRow.setLayoutManager(thirdGridLayout);
+        binding.fourthRow.setLayoutManager(fourthGridLayout);
 
         rowAdapter = new firstRowAdapter();
+        favoriteAdapter = new FavoriteAdapter();
+        artistRecommended = new ArtistRecommendedAdapter();
+        songAdapter = new SongHomeAdapter();
+
         binding.firstRown.setAdapter(rowAdapter);
+        binding.secondRow.setAdapter(favoriteAdapter);
+        binding.thirdRow.setAdapter(artistRecommended);
+        binding.fourthRow.setAdapter(songAdapter);
+
         return binding.getRoot();
     }
 }
