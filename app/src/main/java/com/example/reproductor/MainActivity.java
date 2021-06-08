@@ -1,23 +1,24 @@
 package com.example.reproductor;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.reproductor.Fragments.ArtistFragment;
 import com.example.reproductor.Fragments.LibreriaFragment;
 import com.example.reproductor.Fragments.gridFragmentRecycler;
+import com.example.reproductor.Services.ServicesFirebase;
 import com.example.reproductor.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
-    public static final int var = 1;
+
     private ActivityMainBinding binding;
     private ActionBarDrawerToggle mToggle;
     @Override
