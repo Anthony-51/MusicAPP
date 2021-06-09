@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,6 +18,7 @@ import com.example.reproductor.Services.ServicesFirebase;
 import com.example.reproductor.databinding.ActivityViewReproductorBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
@@ -26,6 +29,7 @@ public class ViewReproductor extends AppCompatActivity implements MediaPlayer.On
     private ServicesFirebase services;
     private ArrayList<Canciones> canciones;
     private MediaPlayer mediaPlayer;
+    private Animation animFadeIn, animFadeOut;
     int index;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,8 @@ public class ViewReproductor extends AppCompatActivity implements MediaPlayer.On
         reproductorBinding = ActivityViewReproductorBinding.inflate(getLayoutInflater());
         setContentView(reproductorBinding.getRoot());
         services = new ServicesFirebase();
+        animFadeIn = AnimationUtils.loadAnimation(this,R.anim.fade_in);
+        animFadeOut = AnimationUtils.loadAnimation(this,R.anim.fade_out);
         getDatos();
         fetchMusicFromFirebase();
         Object img = services.getImage(canciones.get(index).getArtista(),canciones.get(index).getNombre());
@@ -68,6 +74,19 @@ public class ViewReproductor extends AppCompatActivity implements MediaPlayer.On
         canciones = (ArrayList<Canciones>)getIntent().getSerializableExtra("ArrayCanciones");
         index = getIntent().getIntExtra("Index",0);
     }
+    public void musicControl(View view){
+        if(mediaPlayer.isPlaying()){
+            mediaPlayer.pause();
+            reproductorBinding.play.startAnimation(animFadeOut);
+            reproductorBinding.play.setImageResource(R.drawable.ic_play);
+            reproductorBinding.play.startAnimation(animFadeIn);
+        }else{
+            mediaPlayer.start();
+            reproductorBinding.play.startAnimation(animFadeOut);
+            reproductorBinding.play.setImageResource(R.drawable.ic_pause);
+            reproductorBinding.play.startAnimation(animFadeIn);
+        }
+    }
     public void nextSong(View view){
         index++;
         if(index > canciones.size()-1){
@@ -78,6 +97,7 @@ public class ViewReproductor extends AppCompatActivity implements MediaPlayer.On
 
             GlideApp.with(this).load(img).into(reproductorBinding.imgReproductor);
             reproductorBinding.nameReproductor.setText(canciones.get(index).getNombre());
+            playFetchMusicFromFirebase();
         }
     }
     public void previousSong(View view){
@@ -90,6 +110,7 @@ public class ViewReproductor extends AppCompatActivity implements MediaPlayer.On
 
             GlideApp.with(this).load(img).into(reproductorBinding.imgReproductor);
             reproductorBinding.nameReproductor.setText(canciones.get(index).getNombre());
+            playFetchMusicFromFirebase();
         }
     }
     void fetchMusicFromFirebase(){
@@ -119,9 +140,39 @@ public class ViewReproductor extends AppCompatActivity implements MediaPlayer.On
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
+                Log.i("TAG", e.getMessage());
             }
         });
+    }
+    void playFetchMusicFromFirebase(){
+        String cancion = canciones.get(index).getNombre();
+        String artista = canciones.get(index).getArtista();
+        if(mediaPlayer.isPlaying()){
+            mediaPlayer.reset();
+            StorageReference ref = services.getStorageReference().child(artista+" Music/"+cancion+".mp3");
+            if(services.getStorageReference() == null){
+                Toast.makeText(getApplicationContext(),"Error al encontrar databse",Toast.LENGTH_SHORT).show();
+            }
+            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    try{
+                        final String url = uri.toString();
+                        mediaPlayer.setDataSource(url);
+                        mediaPlayer.setOnPreparedListener(ViewReproductor.this);
+                        mediaPlayer.prepareAsync();
+                        onPrepared(mediaPlayer);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.i("TAG", e.getMessage());
+                }
+            });
+        }
     }
 
     @Override
