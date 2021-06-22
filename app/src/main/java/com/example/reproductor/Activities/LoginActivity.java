@@ -1,16 +1,16 @@
-package com.example.reproductor;
+package com.example.reproductor.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.MotionEventCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.reproductor.Activities.MainActivity;
+import com.example.reproductor.R;
 import com.example.reproductor.Services.ServicesFirebase;
 import com.example.reproductor.databinding.ActivityLoginActivtyBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -45,33 +45,6 @@ public class LoginActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.slide_from_bottom,R.anim.slide_to_bottom);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        int action = MotionEventCompat.getActionMasked(event);
-
-        switch(action) {
-            case (MotionEvent.ACTION_DOWN) :
-                Log.e(TAG,"Action was DOWN");
-                return true;
-            case (MotionEvent.ACTION_MOVE) :
-                Log.e(TAG,"Action was MOVE");
-                Log.e(TAG,""+getResources().getConfiguration());
-                return true;
-            case (MotionEvent.ACTION_UP) :
-                Log.e(TAG,"Action was UP");
-                return true;
-            case (MotionEvent.ACTION_CANCEL) :
-                Log.e(TAG,"Action was CANCEL");
-                return true;
-            case (MotionEvent.ACTION_OUTSIDE) :
-                Log.e(TAG,"Movement occurred outside bounds " +
-                        "of current screen element");
-                return true;
-            default :
-                return super.onTouchEvent(event);
-        }
     }
     private void slider(){
         SlidrConfig config = new SlidrConfig.Builder()
@@ -120,20 +93,20 @@ public class LoginActivity extends AppCompatActivity {
                     map.put("email",email);
                     map.put("password",password);
                     String id = Objects.requireNonNull(service.getFirebaseAuth().getCurrentUser()).getUid();
-                    service.getDatabaseReference().child("users").child(id).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> taskH) {
-                            if(taskH.isSuccessful()){
-                                Intent home = new Intent(getApplicationContext(),MainActivity.class);
-                                home.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                getApplicationContext().startActivity(home);
-                                finish();//evitar que usuario regrese si ya se registro
-                            }else{
-                                Toast.makeText(getApplicationContext(),"Fallo en registrar datos",Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                    
+//                    service.getDatabaseReference().child("users").child(id).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Void> taskH) {
+//                            if(taskH.isSuccessful()){
+//                                Intent home = new Intent(getApplicationContext(), MainActivity.class);
+//                                home.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                getApplicationContext().startActivity(home);
+//                                finish();//evitar que usuario regrese si ya se registro
+//                            }else{
+//                                Toast.makeText(getApplicationContext(),"Fallo en registrar datos",Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
+
                     service.getFirebaseFirestore().collection("users").document(email).set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> taskH) {

@@ -4,38 +4,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical">
+    tools:context=".Activities.MainActivity"
+    android:orientation="vertical"
+    android:background="@color/bg_color">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:scrollbars="none"
-        >
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-                <FrameLayout
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end">
+
+                <ImageButton
+                    android:id="@+id/search_close_btn"
+                    android:layout_width="40dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/btn_bg_reproductor"
+                    android:backgroundTint="@color/btn_bg_color"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_image_toolbar_foreground" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="35sp"
+                    android:text="Music"
+                    android:textSize="30sp" />
+            </androidx.appcompat.widget.Toolbar>
+
+            <FrameLayout
                     android:id="@+id/container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="60dp">
+                    android:paddingBottom="50dp">
                 </FrameLayout>
-
         </LinearLayout>
-    </ScrollView>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav"
         app:headerLayout="@layout/nav_header"
@@ -46,11 +59,7 @@
         app:itemIconTint="@color/white"
         app:menu="@menu/navigation_bar"
         android:layout_gravity="start"
-        
         />
-
-
-
     </androidx.drawerlayout.widget.DrawerLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

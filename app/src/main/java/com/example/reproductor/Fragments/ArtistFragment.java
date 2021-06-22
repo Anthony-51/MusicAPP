@@ -52,7 +52,7 @@ public class ArtistFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(final DataSnapshot data : snapshot.getChildren()){
-                    if(!data.getKey().equals("Canciones")){
+                    if(!data.getKey().equals("users")){
                         Artistas at = data.getValue(Artistas.class);
                         artistas.add(at);
                         artistAdapter.notifyDataSetChanged();

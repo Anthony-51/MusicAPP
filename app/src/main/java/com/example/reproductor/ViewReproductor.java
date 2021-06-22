@@ -1,5 +1,6 @@
 package com.example.reproductor;
 
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -47,17 +48,6 @@ public class ViewReproductor extends AppCompatActivity implements MediaPlayer.On
         reproductorBinding.nameReproductor.setText(canciones.get(index).getNombre());
 
 
-        reproductorBinding.replay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(reproductorBinding.replay.isSelected()){
-                    reproductorBinding.replay.setSelected(false);
-
-                }else{
-                    reproductorBinding.replay.setSelected(true);
-                }
-            }
-        });
         reproductorBinding.shufle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,6 +57,7 @@ public class ViewReproductor extends AppCompatActivity implements MediaPlayer.On
                 }else{
                     reproductorBinding.shufle.setSelected(true);
                 }
+//                Intent startMain = new Intent(Intent.ACTION_MAIN); startMain.addCategory(Intent.CATEGORY_HOME); startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); startActivity(startMain);
             }
         });
         }
@@ -111,6 +102,16 @@ public class ViewReproductor extends AppCompatActivity implements MediaPlayer.On
             GlideApp.with(this).load(img).into(reproductorBinding.imgReproductor);
             reproductorBinding.nameReproductor.setText(canciones.get(index).getNombre());
             playFetchMusicFromFirebase();
+        }
+    }
+
+    public void replaySong(View view){
+        if(reproductorBinding.replay.isSelected()){
+            reproductorBinding.replay.setSelected(false);
+            mediaPlayer.setLooping(false);
+        }else{
+            reproductorBinding.replay.setSelected(true);
+            mediaPlayer.setLooping(true);
         }
     }
     void fetchMusicFromFirebase(){

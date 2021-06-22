@@ -3,7 +3,13 @@
     <item android:id="@+id/setting"
         android:title="Configuracion"
         android:icon="@drawable/ic_setting"/>
+
+    <item android:id="@+id/login"
+        android:title="Ingresar"
+        android:icon="@drawable/ic_login"
+        />
+
     <item android:id="@+id/log_out"
         android:title="Salir"
-        android:icon="@drawable/ic_logo_out"/>
+        android:icon="@drawable/ic_log_out"/>
 </menu>

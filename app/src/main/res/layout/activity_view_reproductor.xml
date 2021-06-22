@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ViewReproductor"
-    android:padding="30dp">
+    android:padding="30dp"
+    android:background="@color/bg_color">
     <ImageView
         android:id="@+id/img_reproductor"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:src="@drawable/ainaaiba"
         android:scaleType="centerCrop"
+        android:background="@drawable/button_rounded"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -114,6 +116,7 @@
             android:background="@drawable/btn_bg_reproductor"
             android:backgroundTint="@color/btn_bg_color"
             android:contentDescription="@string/song"
+            android:onClick="replaySong"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/next"
             app:layout_constraintBottom_toBottomOf="parent"
