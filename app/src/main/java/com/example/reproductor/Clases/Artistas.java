@@ -6,8 +6,7 @@ import java.util.ArrayList;
 public class Artistas implements Serializable {
     private String Nombre;
     private String Descripcion;
-
-
+    private ArrayList<String> Canciones;
 
     public Artistas() {
 //        try{
@@ -20,6 +19,12 @@ public class Artistas implements Serializable {
     public Artistas(String nombre, String descripcion) {
         this.Nombre = nombre;
         this.Descripcion = descripcion;
+    }
+
+    public Artistas(String nombre, String descripcion, ArrayList<String> canciones) {
+        Nombre = nombre;
+        Descripcion = descripcion;
+        Canciones = canciones;
     }
 
     public String getNombre() {
@@ -38,4 +43,11 @@ public class Artistas implements Serializable {
         this.Descripcion = descripcion;
     }
 
+    public ArrayList<String> getCanciones() {
+        return Canciones;
+    }
+
+    public void setCanciones(ArrayList<String> canciones) {
+        Canciones = canciones;
+    }
 }

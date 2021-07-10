@@ -12,18 +12,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.reproductor.Clases.Artistas;
+import com.example.reproductor.Interfaces.OnNoteListener;
+import com.example.reproductor.Interfaces.OpenBottomSheetArtist;
 import com.example.reproductor.Services.ServicesFirebase;
 import com.example.reproductor.databinding.RowArtistsBinding;
 
 import java.util.ArrayList;
 
 public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder> {
-    private ArrayList<Artistas> artist;
+    private  ArrayList<Artistas> artist;
     private Context context;
-    private ServicesFirebase servicesFirebase;
-    public ArtistAdapter(ArrayList<Artistas> artist) {
+    private final ServicesFirebase servicesFirebase;
+    private final OpenBottomSheetArtist openBottomSheetArtist;
+    public ArtistAdapter(ArrayList<Artistas> artist, OpenBottomSheetArtist openBottomSheetArtist) {
         this.servicesFirebase = new ServicesFirebase();
         this.artist = artist;
+        this.openBottomSheetArtist = openBottomSheetArtist;
     }
 
     @NonNull
@@ -31,7 +35,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
     public ArtistAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         RowArtistsBinding binding = RowArtistsBinding.inflate(LayoutInflater.from(context),parent,false);
-        return new ViewHolder(binding);
+        return new ViewHolder(binding, openBottomSheetArtist);
     }
 
     @Override
@@ -54,14 +58,24 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return artist.size();
+        return artist != null ? artist.size() : 5;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private RowArtistsBinding binding;
-        public ViewHolder(RowArtistsBinding binding) {
+    public ArrayList<Artistas> getArtist() {
+        return artist;
+    }
+
+    public void setArtist(ArrayList<Artistas> artist) {
+        this.artist = artist;
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private final RowArtistsBinding binding;
+        private final OpenBottomSheetArtist openBottomSheetArtist;
+        public ViewHolder(RowArtistsBinding binding, OpenBottomSheetArtist openBottomSheetArtist) {
             super(binding.getRoot());
             this.binding = binding;
+            this.openBottomSheetArtist = openBottomSheetArtist;
             binding.description.setOnTouchListener(new View.OnTouchListener() {
 
                 public boolean onTouch(View v, MotionEvent event) {
@@ -71,6 +85,12 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
                 }
             });
             binding.description.setMovementMethod(new ScrollingMovementMethod());
+            binding.getRoot().setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            openBottomSheetArtist.sendPositionArtist(getAdapterPosition());
         }
     }
 }

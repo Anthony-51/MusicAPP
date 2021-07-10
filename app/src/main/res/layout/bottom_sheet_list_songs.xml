@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/bottom_sheet_list"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="com.example.reproductor.Clases.CustomBottomSheet"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:behavior_peekHeight="80dp"
+    android:clickable="true"
+    android:background="@color/black"
+    app:behavior_hideable="false"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="vertical"
+        android:background="@color/search_view"
+        android:backgroundTint="@color/white">
+        <View
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="60dp"
+            android:layout_height="8dp"
+            android:background="@drawable/button_rounded"
+            android:backgroundTint="@color/white"/>
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_bottom_sheet_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="15dp"
+        />
+</LinearLayout>

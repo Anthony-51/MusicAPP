@@ -1,5 +1,7 @@
 package com.example.reproductor.Fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -19,76 +21,86 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.reproductor.Activities.MainActivity;
+import com.example.reproductor.Adapters.ArtistAdapter;
+import com.example.reproductor.Adapters.ArtistHomeAdapter;
 import com.example.reproductor.Adapters.firstRowAdapter;
+import com.example.reproductor.Clases.Artistas;
 import com.example.reproductor.Clases.Canciones;
+import com.example.reproductor.Clases.Usuario;
+import com.example.reproductor.Interfaces.OnNoteListener;
+import com.example.reproductor.Interfaces.SendData;
 import com.example.reproductor.R;
 import com.example.reproductor.Services.ServicesFirebase;
 import com.example.reproductor.databinding.ActivityMainBinding;
 import com.example.reproductor.databinding.HomeFragmentBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
-public class HomeFragment extends Fragment implements MediaPlayer.OnPreparedListener, firstRowAdapter.OnNoteListener {
+public class HomeFragment extends Fragment implements OnNoteListener {
     private ServicesFirebase services;
-    private ActivityMainBinding activityMainBinding;
-    private BottomSheetBehavior behavior;
-    public View bottom;
     public static HomeFragmentBinding binding;
     private RecyclerView.LayoutManager firstGridLayout,secondGridLayout, thirdGridLayout,fourthGridLayout;
-    private firstRowAdapter rowAdapter,secondAdapter,thirdAdapter,fourthAdapter;
-    private MediaPlayer mediaPlayer;
-    public static ArrayList<Canciones> canciones;
-    private Animation animFadeIn, animFadeOut;
-    ViewGroup.LayoutParams params;
+    private firstRowAdapter rowAdapter,secondAdapter,fourthAdapter;
+    private ArtistHomeAdapter artistHomeAdapter;
+    public static ArrayList<Canciones> canciones, songsSameByArtist, randomSongs;
+    private ArrayList<HashMap<String, Object>> songLikesArrayList;
+    private ArrayList<String> nameArtist;
+    SendData sendData;
     int index,height;
+    private final String TAG = "Home Fragment";
+    private SwipeRefreshLayout refresh;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = HomeFragmentBinding.inflate(inflater, container, false);
         services = new ServicesFirebase();
-        canciones = new ArrayList<>();
-        activityMainBinding = MainActivity.binding;
+        nameArtist = new ArrayList<>();
+//
+//        songLikesArrayList = new ArrayList<>();
         setLayouts();
         getDatos();
-        animFadeIn = AnimationUtils.loadAnimation(getContext(),R.anim.fade_in);
-        animFadeOut = AnimationUtils.loadAnimation(getContext(),R.anim.fade_out);
-        //BOTTOM SHEET
-        CoordinatorLayout layout = (CoordinatorLayout) binding.homeContent;
-        bottom = layout.findViewById(R.id.bottomsheet);
-        behavior = BottomSheetBehavior.from(bottom);
-        params = (ViewGroup.LayoutParams) binding.bottomsheet.imgReproductor.getLayoutParams();
-        height = binding.bottomsheet.imgReproductor.getLayoutParams().height;
 
-        rowAdapter = new firstRowAdapter(canciones,this);
-        rowAdapter.notifyDataSetChanged();
-        secondAdapter = new firstRowAdapter();
-        thirdAdapter = new firstRowAdapter();
-        fourthAdapter = new firstRowAdapter();
+        rowAdapter = new firstRowAdapter(canciones,this, "Recommended");
+        secondAdapter = new firstRowAdapter(this,songLikesArrayList,"Favorite");
+        artistHomeAdapter = new ArtistHomeAdapter(nameArtist);
+        fourthAdapter = new firstRowAdapter(songsSameByArtist,this,"OthersSongsArtist");
+
 
         binding.firstRown.setAdapter(rowAdapter);
         binding.secondRow.setAdapter(secondAdapter);
-        binding.thirdRow.setAdapter(thirdAdapter);
+        binding.thirdRow.setAdapter(artistHomeAdapter);
         binding.fourthRow.setAdapter(fourthAdapter);
-        stateBottomSheet();
 
         getUser();
-        binding.bottomsheet.play.setOnClickListener(this::musicControl);
-        binding.bottomsheet.next.setOnClickListener(this::nextSong);
-        binding.bottomsheet.previous.setOnClickListener(this::previousSong);
-        binding.bottomsheet.replay.setOnClickListener(this::replaySong);
-        binding.bottomsheet.playCollapse.setOnClickListener(this::musicControl);
-        binding.bottomsheet.nextCollapse.setOnClickListener(this::nextSong);
+        refresh = binding.homeContent;
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getDatos();
+                refresh.setRefreshing(false);
+            }
+        });
+
         return binding.getRoot();
     }
 
@@ -103,36 +115,112 @@ public class HomeFragment extends Fragment implements MediaPlayer.OnPreparedList
     }
 
     void getDatos(){
-        services.getDatabaseReference().addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(final DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    String nombre = dataSnapshot.getKey();
-                    if(!nombre.equals("users")){
-                        services.getDatabaseReference().child(nombre).child("Canciones").limitToFirst(3).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for(final DataSnapshot ds : snapshot.getChildren()){
-                                Canciones cs = ds.getValue(Canciones.class);
-                                cs.setArtista(nombre);
-                                canciones.add(cs);
-                                rowAdapter.notifyDataSetChanged();
+        if(services.getFirebaseAuth().getCurrentUser() != null){
+            String email = services.getFirebaseAuth().getCurrentUser().getEmail();
+            services.getFirebaseFirestore().collection("users").document(email).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if(task.isSuccessful()){
+                        DocumentSnapshot document = task.getResult();
+                        if(document.exists()){
+                            Usuario user = document.toObject(Usuario.class);
+                            if(user.getSongLikes() != null){
+                                songLikesArrayList = user.getSongLikes();
+                            }
+                             othersSongsBySameArtist(user.getSongLikes());
+                             secondAdapter.setSongLikesArrayList(songLikesArrayList);
+                             binding.secondRow.setAdapter(secondAdapter);
+                        }
+                    }
+                }
+            });
+            services.getFirebaseFirestore().collection("artistas").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if(task.isSuccessful()){
+                        if(canciones == null){
+                            canciones = new ArrayList<>();
+                            randomSongs = new ArrayList<>();
+                        }else{
+                            canciones.clear();
+                            randomSongs.clear();
+                            nameArtist.clear();
+                        }
+                        for (DocumentSnapshot document : task.getResult()){
+                                nameArtist.add(document.getId());
+                                final ArrayList<String> randomSong = (ArrayList<String>) document.get("Canciones");
+                                if(randomSong != null){
+                                    for(int i = 0; i < randomSong.size(); i++){
+                                        Canciones cs = new Canciones(randomSong.get(i),document.getId());
+                                        randomSongs.add(cs);
+                                    }
+                                }
+                        }
+                        final int size = randomSongs.size();
+                        for(int  i = 0; i < size; i++){
+                            final Canciones rSong = randomSongs.get(new Random().nextInt(size));
+                            if(!canciones.contains(rSong)){
+                                if(canciones.size() == 9){
+                                    break;
+                                }
+                                canciones.add(rSong);
                             }
                         }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                        }
-                    });
-                        Log.e("prueba",""+nombre);
+                        rowAdapter.setCanciones(canciones);
+                        artistHomeAdapter.setArtistasArrayList(nameArtist);
+                        binding.firstRown.setAdapter(rowAdapter);
+                        binding.thirdRow.setAdapter(artistHomeAdapter);
                     }
-
                 }
-            }
+            });
+        }
 
+    }
+    private void othersSongsBySameArtist(ArrayList<HashMap<String,Object>> songs){
+        final int size = songs.size();
+        ArrayList<Canciones> prbcanciones = new ArrayList<>();
+
+        List<String> artistas = new ArrayList<>();
+        for(int i = 0; i < size; i++){
+            final String artist = songs.get(i).get("Artista").toString();
+            if(!artistas.contains(artist)){
+                artistas.add(artist);
+            }
+        }
+        services.getFirebaseFirestore().collection("artistas").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onCancelled (DatabaseError error){
-                // Failed to read value
-                Log.w("TAG", "Failed to read value.", error.toException());
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    if(songsSameByArtist == null){
+                        songsSameByArtist = new ArrayList<>();
+                    }else{
+                        songsSameByArtist.clear();
+                        prbcanciones.clear();
+                    }
+                    for (DocumentSnapshot documentSnapshot : task.getResult()){
+                        if(artistas.contains(documentSnapshot.getId())){
+                            final ArrayList<String> randomSong = (ArrayList<String>) documentSnapshot.get("Canciones");
+                            if(randomSong != null){
+                                for(int i = 0; i < randomSong.size(); i++){
+                                    Canciones cs  = new Canciones(randomSong.get(i),documentSnapshot.getId());
+                                    prbcanciones.add(cs);
+                                }
+                            }
+                        }
+                    }
+                    final int size = prbcanciones.size();
+                    for (int i = 0; i < size; i++){
+                        final Canciones can = prbcanciones.get(new Random().nextInt(size));
+                        if(!songsSameByArtist.contains(can)){
+                            if(songsSameByArtist.size() == 9){
+                                break;
+                            }
+                            songsSameByArtist.add(can);
+                        }
+                    }
+                    fourthAdapter.setCanciones(songsSameByArtist);
+                    binding.fourthRow.setAdapter(fourthAdapter);
+                }
             }
         });
     }
@@ -147,223 +235,36 @@ public class HomeFragment extends Fragment implements MediaPlayer.OnPreparedList
         binding.thirdRow.setLayoutManager(thirdGridLayout);
         binding.fourthRow.setLayoutManager(fourthGridLayout);
     }
-
-    public void stateBottomSheet(){
-        binding.bottomsheet.layoutCollapse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            }
-        });
-        behavior.addBottomSheetCallback(new BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
-                switch (newState){
-                    case BottomSheetBehavior.STATE_COLLAPSED:
-                        activityMainBinding.buttonNav.setVisibility(View.VISIBLE);
-                        activityMainBinding.toolbar.setVisibility(View.VISIBLE);
-                        binding.bottomsheet.layoutCollapse.setVisibility(View.VISIBLE);
-                        activityMainBinding.container.setPadding(0,0,0,100);
-                        params.height =  binding.bottomsheet.imgReproductor.getMinimumHeight();
-                        params.width = binding.bottomsheet.imgReproductor.getMinimumHeight();
-                        binding.bottomsheet.imgReproductor.setLayoutParams(params);
-                        binding.bottomsheet.imgReproductor.setTranslationY(-(float) (binding.bottomsheet.getRoot().getHeight() *0.12));
-                        binding.bottomsheet.imgReproductor.setTranslationX(-(float) (binding.bottomsheet.getRoot().getRight() * 0.4));
-                        break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        binding.bottomsheet.layoutCollapse.setVisibility(View.VISIBLE);
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED:
-                        activityMainBinding.buttonNav.setVisibility(View.INVISIBLE);
-                        activityMainBinding.toolbar.setVisibility(View.GONE);
-                        binding.bottomsheet.layoutCollapse.setVisibility(View.INVISIBLE);
-                        activityMainBinding.container.setPadding(0,0,0,0);
-                        break;
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        activityMainBinding.buttonNav.setVisibility(View.INVISIBLE);
-                        activityMainBinding.toolbar.setVisibility(View.GONE);
-                        activityMainBinding.container.setPadding(0,0,0,0);
-                        mediaPlayer.reset();
-                        Log.e("TAG","HIDDEN");
-                        break;
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                float var = (float) (450 - bottomSheet.getTop()) / 450;
-                float var2 = (float) (bottomSheet.getTop() - (bottomSheet.getHeight() * 0.8)) / 100;
-                binding.bottomsheet.layoutExpand.setAlpha(var);
-                binding.bottomsheet.layoutCollapse.setAlpha(var2);
-                int right = binding.bottomsheet.getRoot().getRight();
-                int bottom = binding.bottomsheet.getRoot().getHeight();
-                if(bottomSheet.getTop() > 400){
-
-                    int med = height - ((binding.bottomsheet.getRoot().getTop() - 400) / 2);
-                    if( med > binding.bottomsheet.imgReproductor.getMinimumHeight()){
-                        params.height =  med;
-                        params.width = med;
-                        int hInner = binding.bottomsheet.getRoot().getTop() - 400; //height vuelve a comenzar de 0
-                        if(hInner < (right * 0.4)){
-                            binding.bottomsheet.imgReproductor.setTranslationX(-(float) (hInner));
-                            if(hInner < (bottom * 0.12)){
-                                binding.bottomsheet.imgReproductor.setTranslationY(-(float) (hInner));
-                            }else{
-                                binding.bottomsheet.imgReproductor.setTranslationY(-(float) (bottom * 0.12));
-                            }
-                        }else{
-                            binding.bottomsheet.imgReproductor.setTranslationX(-(float) (right * 0.4));
-                        }
-                    }
-                }else {
-                    params.height =  height;
-                    params.width = height;
-                    binding.bottomsheet.imgReproductor.setTranslationY(0);
-                    binding.bottomsheet.imgReproductor.setTranslationX(0);
-                }
-                binding.bottomsheet.imgReproductor.setLayoutParams(params);
-            }
-        });
-    }
-    void fetchMusicFromFirebase(String artista, String cancion){
-        if(mediaPlayer != null){
-            mediaPlayer.reset();
-            StorageReference ref = services.getStorageReference().child(artista+" Music/"+cancion+".mp3");
-            if(services.getStorageReference() == null){
-                Toast.makeText(getContext(),"Error al encontrar databse",Toast.LENGTH_SHORT).show();
-            }
-            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    try{
-                        final String url = uri.toString();
-                        mediaPlayer.setDataSource(url);
-                        mediaPlayer.setOnPreparedListener(HomeFragment.this);
-                        mediaPlayer.prepareAsync();
-                        onPrepared(mediaPlayer);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.i("TAG", e.getMessage());
-                }
-            });
-        }
-        else{
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            StorageReference ref = services.getStorageReference().child(artista+" Music/"+cancion+".mp3");
-            if(services.getStorageReference() == null){
-                Toast.makeText(getContext(),"Error al encontrar databse",Toast.LENGTH_SHORT).show();
-            }
-            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    try {
-                        //dowload url or file
-                        final String url = uri.toString();
-                        mediaPlayer.setDataSource(url);
-                        // wait for mediaplayer to get prepare
-                        mediaPlayer.setOnPreparedListener(HomeFragment.this);
-                        mediaPlayer.prepareAsync();
-                        onPrepared(mediaPlayer);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.i("TAG", e.getMessage());
-                }
-            });
-        }
-
-    }
-    public int dpToPx(int dp) {
-        DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
-        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-    }
-
-
     @Override
-    public void onPrepared(MediaPlayer mp) {
-        mp.start();
+    public void onNoteClick(int position, String recycler) {
+        String carpeta, cancion;
+        switch (recycler) {
+            case "Recommended":
+                carpeta = canciones.get(position).getArtista();
+                cancion = canciones.get(position).getNombre();
+                sendData.getData(carpeta, cancion);
+                break;
+            case  "Favorite":
+                carpeta = songLikesArrayList.get(position).get("Artista").toString();
+                cancion = songLikesArrayList.get(position).get("Cancion").toString();
+                index = position;
+                sendData.getData(carpeta, cancion);
+                break;
+            case  "OthersSongsArtist":
+                carpeta = songsSameByArtist.get(position).getArtista();
+                cancion = songsSameByArtist.get(position).getNombre();
+                sendData.getData(carpeta,cancion);
+        }
     }
 
     @Override
-    public void onNoteClick(int position) {
-        String carpeta = canciones.get(position).getArtista();
-        String cancion = canciones.get(position).getNombre();
-        Object img = services.getImage(carpeta,cancion);
-        Glide.with(getContext()).load(img).into(binding.bottomsheet.imgReproductor);
-        binding.bottomsheet.nameReproductor.setText(cancion);
-        binding.bottomsheet.nameReproductorCollapse.setText(cancion);
-        bottom.setVisibility(View.VISIBLE);
-        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        fetchMusicFromFirebase(carpeta,cancion);
-        index = position;
-    }
-
-    public void musicControl(View view){
-        if(mediaPlayer.isPlaying()){
-            mediaPlayer.pause();
-            binding.bottomsheet.play.startAnimation(animFadeOut);
-            binding.bottomsheet.play.setImageResource(R.drawable.ic_play);
-            binding.bottomsheet.play.startAnimation(animFadeIn);
-        }else{
-            mediaPlayer.start();
-            binding.bottomsheet.play.startAnimation(animFadeOut);
-            binding.bottomsheet.play.setImageResource(R.drawable.ic_pause);
-            binding.bottomsheet.play.startAnimation(animFadeIn);
-        }
-    }
-
-
-    public void nextSong(View view){
-        index++;
-        if(index > canciones.size()-1){
-            Toast.makeText(getContext(),"No hay mas canciones",Toast.LENGTH_SHORT).show();
-            index--;
-        }else{
-            String carpeta = canciones.get(index).getArtista();
-            String cancion = canciones.get(index).getNombre();
-            Object img = services.getImage(canciones.get(index).getArtista(),canciones.get(index).getNombre());
-
-            Glide.with(this).load(img).into(binding.bottomsheet.imgReproductor);
-            binding.bottomsheet.nameReproductor.setText(cancion);
-            binding.bottomsheet.nameReproductorCollapse.setText(cancion);
-            fetchMusicFromFirebase(carpeta,cancion);
-        }
-    }
-    public void previousSong(View view){
-        index--;
-        if(index < 0){
-            Toast.makeText(getContext(),"No hay mas canciones",Toast.LENGTH_SHORT).show();
-            index++;
-        }else{
-            String carpeta = canciones.get(index).getArtista();
-            String cancion = canciones.get(index).getNombre();
-            Object img = services.getImage(canciones.get(index).getArtista(),canciones.get(index).getNombre());
-
-            Glide.with(this).load(img).into(binding.bottomsheet.imgReproductor);
-            binding.bottomsheet.nameReproductor.setText(cancion);
-            binding.bottomsheet.nameReproductorCollapse.setText(cancion);
-            fetchMusicFromFirebase(carpeta,cancion);
-        }
-    }
-
-    public void replaySong(View view){
-        if(binding.bottomsheet.replay.isSelected()){
-            binding.bottomsheet.replay.setSelected(false);
-            mediaPlayer.setLooping(false);
-        }else{
-            binding.bottomsheet.replay.setSelected(true);
-            mediaPlayer.setLooping(true);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Activity activity = (Activity) context;
+        try {
+            sendData = (SendData) activity;
+        }catch(RuntimeException e){
+            throw new RuntimeException(activity.toString()+"Must implement method");
         }
     }
 }

@@ -1,9 +1,13 @@
 package com.example.reproductor.Clases;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Usuario implements Serializable {
+public class Usuario implements Serializable, Comparable<Usuario> {
     private String email, password, userName, imgPerfil, imgFondo;
+    private ArrayList<HashMap<String, Object>> cancionesRecientes;
+    private ArrayList<HashMap<String, Object>> songLikes;
 
     public Usuario() {
     }
@@ -65,5 +69,26 @@ public class Usuario implements Serializable {
 
     public void setImgFondo(String imgFondo) {
         this.imgFondo = imgFondo;
+    }
+
+    public ArrayList<HashMap<String, Object>> getCancionesRecientes() {
+        return cancionesRecientes;
+    }
+
+    public void setCancionesRecientes(ArrayList<HashMap<String, Object>> cancionesRecientes) {
+        this.cancionesRecientes = cancionesRecientes;
+    }
+
+    public ArrayList<HashMap<String, Object>> getSongLikes() {
+        return songLikes;
+    }
+
+    public void setSongLikes(ArrayList<HashMap<String, Object>> songLikes) {
+        this.songLikes = songLikes;
+    }
+
+    @Override
+    public int compareTo(Usuario o) {
+        return 0;
     }
 }

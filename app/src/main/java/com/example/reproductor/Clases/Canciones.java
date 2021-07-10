@@ -7,6 +7,13 @@ public class Canciones implements Serializable {
     private String artista;
     public Canciones() {
     }
+    public Canciones(String nombre) {
+        this.Nombre = nombre;
+    }
+    public Canciones(String nombre, String artista) {
+        Nombre = nombre;
+        this.artista = artista;
+    }
 
     public String getArtista() {
         return artista;
@@ -16,9 +23,7 @@ public class Canciones implements Serializable {
         this.artista = artista;
     }
 
-    public Canciones(String nombre) {
-       this.Nombre = nombre;
-    }
+
 
     public String getNombre() {
         return Nombre;

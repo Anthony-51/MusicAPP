@@ -25,10 +25,8 @@
         <activity
             android:name=".Activities.LoginActivity"
             android:theme="@style/AppTheme.SlidrActivityTheme" />
-        <activity
-            android:name=".ViewReproductor"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".Activities.MainActivity" />
+        <activity android:name=".Activities.MainActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".SplashScreen"
             android:theme="@style/screen">

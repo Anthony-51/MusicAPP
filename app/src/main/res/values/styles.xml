@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Widget.Theme.Reproductor.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/black_overlay</item>
@@ -7,5 +7,20 @@
     <style name="Widget.Theme.Reproductor.ButtonBar.Fullscreen" parent="">
         <item name="android:background">@color/black_overlay</item>
         <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+    </style>
+    <style name="ToolbarTheme">
+
+    </style>
+    <style name="Widget.MyApp.BottomSheet.Modal" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="behavior_skipCollapsed">true</item>
+        <item name="behavior_fitToContents">true</item>
+        <item name="behavior_peekHeight">10dp</item> // yep, that helped to skip collapsed state at initial
+        <item name="behavior_hideable">true</item>
+    </style>
+    <style name="Theme.MyApp.BottomSheetDialog" parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.MyApp.BottomSheet.Modal</item>
+    </style>
+    <style name="Base.Theme.MyApp" parent="Base.Theme.MyApp" tools:ignore="ResourceCycle">
+        <item name="bottomSheetDialogTheme">@style/Theme.MyApp.BottomSheetDialog</item>
     </style>
 </resources>

@@ -3,7 +3,11 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:background="@drawable/style_border_fragment_artist"
+    android:backgroundTint="@color/black_overlay"
+    android:layout_margin="5dp"
+    >
 
     <ImageView
         android:id="@+id/img_artist"
@@ -15,22 +19,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:contentDescription="@string/artist" />
+
     <TextView
         android:id="@+id/name_artist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxWidth="100dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
         android:text="@string/artist"
-
-        app:layout_constraintTop_toBottomOf="@+id/img_artist"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/img_artist" />
+
     <TextView
+        android:layout_marginTop="3dp"
+        android:id="@+id/name_song"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxWidth="100dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
         android:text="@string/song"
-
-        app:layout_constraintTop_toBottomOf="@+id/name_artist"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/name_artist" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

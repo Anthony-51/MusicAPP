@@ -36,6 +36,7 @@ public class ArtistRecommendedAdapter extends RecyclerView.Adapter<ArtistRecomme
         public ViewHolder(RowMainArtistBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+
         }
     }
 }
