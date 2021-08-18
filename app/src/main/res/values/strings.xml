@@ -9,6 +9,9 @@
     <string name="homeFavorites">Favoritos</string>
     <string name="homeArtistRecommended">Artistas Recomendados</string>
     <string name="homeSongs">Canciones Similares</string>
+    <string name="configuration">Configuracion</string>
+    <string name="log_out">Salir</string>
+    <string name="upload_song">Subir Canciones</string>
 
 
     <string name="open">Open</string>
@@ -27,8 +30,6 @@
     <string name="action_settings">Settings</string>
     <string name="user">Usuario</string>
     <string name="dir_email">email@gmail.com</string>
-    <string name="update">Actualizar</string>
-    <string name="save">Guardar</string>
 
     <string name="interstitial_ad_sample">Interstitial Ad Sample</string>
     <string name="start_level">Level 1</string>
@@ -41,4 +42,24 @@
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <!-- Configuration -->
+    <string name="update">Actualizar</string>
+    <string name="save">Guardar</string>
+    <string name="upload_profile">Subir Perfil</string>
+    <string name="cancel">Cancelar</string>
+    <string name="upload_cover">Subir Portada</string>
+    <string name="new_pass">New Password</string>
+    <string name="account">Cuenta</string>
+    <string name="current_pass">Current Password</string>
+    <string name="profile">Perfil</string>
+    <string name="title_activity_upl_music">UplMusicActivity</string>
+    <string name="tab_text_1">Upload Songs</string>
+    <string name="tab_text_2">Songs Uploaded</string>
+    <string name="subir_caratula">Subir Caratula</string>
+    <string name="seleccionar_cancion">Seleccionar Cancion</string>
+    <string name="nombre">Nombre</string>
+    <string name="subir">Subir</string>
+    <string name="artista">Artista</string>
+    <string name="empty_file">Sin Archivo...</string>
 </resources>

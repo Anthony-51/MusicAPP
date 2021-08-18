@@ -22,6 +22,7 @@
             android:background="#242424"
             android:gravity="end"
             android:orientation="vertical"
+            android:onClick="expandMediaPlayer"
             android:alpha="0">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -85,12 +86,12 @@
             android:contentDescription="@string/artist"
             android:minWidth="45dp"
             android:minHeight="45dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ainaaiba" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/ainaaiba"/>
 
 
     <LinearLayout
-        android:id="@+id/layout_expand"
+        android:id="@+id/controls_expand"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -147,8 +148,10 @@
                 android:id="@+id/seekBar_reproductor"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
-
-                android:secondaryProgressTint="@color/black_overlay" />
+                android:thumbTint="@color/white"
+                android:progressTint="@color/white"
+                android:progressBackgroundTint="@color/white"
+                android:secondaryProgressTint="@color/second_progress" />
         </LinearLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/button_layout"
@@ -182,6 +185,7 @@
                 android:contentDescription="@string/song"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_previous"
+                android:onClick="previousSong"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/play"
                 app:layout_constraintStart_toEndOf="@id/shufle"
@@ -215,7 +219,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/replay"
                 app:layout_constraintStart_toEndOf="@id/play"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:onClick="nextSong"/>
 
             <ImageButton
                 android:id="@+id/replay"
@@ -242,6 +247,12 @@
             android:id="@+id/layout_bottom_list_songs"
             layout="@layout/bottom_sheet_list_songs"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
 
 
 </RelativeLayout>

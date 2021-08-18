@@ -4,16 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@drawable/style_border_fragment_artist"
-    android:layout_margin="5dp"
+    android:padding="10dp"
+    android:background="@color/black"
     >
 
         <ImageView
             android:id="@+id/imageRecycler"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ainaaiba" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ainaaiba"
+            android:contentDescription="@string/s1" />
 
         <TextView
             android:id="@+id/textRecycler"
@@ -22,6 +23,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/song"
-            android:textSize="25sp" />
+            android:layout_marginStart="30dp"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+
+            android:textSize="20sp" />
 
 </LinearLayout>

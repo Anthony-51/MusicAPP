@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.ConfigurationActivity"
+    tools:context=".Views.Activities.ConfigurationActivity"
     android:background="@color/bg_color"
     android:orientation="vertical">
     <ScrollView
@@ -14,106 +14,105 @@
         android:scrollbars="none">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <com.google.android.material.appbar.MaterialToolbar
-                android:layout_height="wrap_content"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:background="@color/black_overlay"
-                android:paddingBottom="10dp"
-                >
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Configuracion"
-                    android:textSize="35sp"
-                    android:textStyle="bold"/>
-            </com.google.android.material.appbar.MaterialToolbar>
+                android:layout_height="wrap_content"
+                android:background="@color/black"/>
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="20dp"/>
-            <LinearLayout
-                android:id="@+id/profile"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_gravity="center"
-                android:paddingHorizontal="20dp"
-                android:gravity="center">
-                <TextView
-                    android:id="@+id/text_profile"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+                    android:paddingHorizontal="20dp"
+                    android:gravity="center">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/profile"
+                        android:textSize="25sp"
+                        android:layout_margin="5dp"/>
+                    <EditText
+                        android:id="@+id/user_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:layout_marginHorizontal="10dp"
+                        android:hint="@string/user"
+                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+                        <Button
+                            android:id="@+id/btn_upload_prf"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/upload_profile"
+                            android:textSize="18sp"
+                            android:layout_margin="5dp"/>
+                        <ImageView
+                            android:id="@+id/img_prf"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:src="@drawable/ainaaiba"
+                            android:scaleType="centerCrop"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="35dp">
+                        <Button
+                            android:id="@+id/btn_upload_cover"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/upload_cover"
+                            android:textSize="18sp"
+                            android:layout_margin="5dp"/>
+                        <ImageView
+                            android:id="@+id/img_cover"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"
+                            android:src="@drawable/ainaaiba"
+                            android:scaleType="centerCrop"/>
+                    </LinearLayout>
+                    <Button
+                        android:id="@+id/btn_update_prf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/save"
+                        android:background="@drawable/button_rounded"
+                        android:backgroundTint="@color/btn_pressed"
+                        android:textSize="20sp"
+                        android:layout_margin="10dp"/>
+
+                </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/progress_prf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Perfil"
-                    android:textSize="25sp"
-                    android:layout_margin="5dp"/>
-                <EditText
-                    android:id="@+id/userNameEdit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:layout_marginHorizontal="10dp"
-                    android:hint="@string/user"
-                    />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center">
-                    <Button
-                        android:id="@+id/btn_upload_img_profile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Subir Perfil"
-                        android:textSize="18sp"
-                        android:layout_margin="5dp"
-                        android:pointerIcon="hand"/>
-                    <ImageView
-                        android:id="@+id/img_user_profile"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:src="@drawable/ainaaiba"
-                        android:scaleType="centerCrop"/>
-                </LinearLayout>
+                    android:layout_centerInParent="true"
+                    android:visibility="invisible"/>
+            </RelativeLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="35dp">
-                    <Button
-                        android:id="@+id/btn_img_cover"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Subir Portada"
-                        android:textSize="18sp"
-                        android:layout_margin="5dp"
-                        android:pointerIcon="hand"/>
-                    <ImageView
-                        android:id="@+id/img_user_cover"
-                        android:layout_width="match_parent"
-                        android:layout_height="150dp"
-                        android:src="@drawable/ainaaiba"
-                        android:scaleType="centerCrop"/>
-                </LinearLayout>
-                <Button
-                    android:id="@+id/btn_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/save"
-                    android:background="@drawable/button_rounded"
-                    android:backgroundTint="@color/btn_pressed"
-                    android:textSize="20sp"
-                    android:layout_margin="10dp"/>
-
-            </LinearLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="60dp"/>
+           <Space
+               android:layout_width="match_parent"
+               android:layout_height="60dp"/>
             <LinearLayout
+                android:id="@+id/account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -122,14 +121,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cuenta"
+                    android:text="@string/account"
                     android:textSize="25sp"
                     android:layout_margin="5dp"/>
                 <Space
                     android:layout_width="match_parent"
                     android:layout_height="15dp"/>
                 <EditText
-                    android:id="@+id/emailEdit"
+                    android:id="@+id/email_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
@@ -137,29 +136,29 @@
                     android:hint="@string/email"
                     />
                 <EditText
-                    android:id="@+id/currentPasswordEdit"
+                    android:id="@+id/current_pass_acc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:layout_marginHorizontal="10dp"
-                    android:hint="Current Password"
+                    android:hint="@string/current_pass"
                     />
                 <EditText
-                    android:id="@+id/newPasswordEdit"
+                    android:id="@+id/new_pass_acc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:layout_marginHorizontal="10dp"
-                    android:hint="New Password"
+                    android:hint="@string/new_pass"
                     />
                 <Space
                     android:layout_width="match_parent"
                     android:layout_height="20dp"/>
                 <Button
-                    android:id="@+id/btn_update_account"
+                    android:id="@+id/btn_update_acc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Actualizar"
+                    android:text="@string/update"
                     android:background="@drawable/button_rounded"
                     android:backgroundTint="@color/btn_pressed"
                     android:textSize="20sp"

@@ -23,4 +23,17 @@
     <style name="Base.Theme.MyApp" parent="Base.Theme.MyApp" tools:ignore="ResourceCycle">
         <item name="bottomSheetDialogTheme">@style/Theme.MyApp.BottomSheetDialog</item>
     </style>
+    <style name="Style.ProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="color">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundColor">@color/white</item>
+        <item name="trackColor">@color/white</item>
+    </style>
+    <style name="sectionHeader"   parent="android:Widget.Holo.Light.TextView">
+        <item name="android:drawableBottom">@drawable/line_bottom_txt</item>
+        <item name="android:padding">7dp</item>
+        <item name="android:hint">"Select Artist"</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
 </resources>

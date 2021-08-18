@@ -17,4 +17,11 @@
     <color name="light_blue_A400">#FF00B0FF</color>
     <color name="black_overlay">#66000000</color>
     <color name="search_view">#22000000</color>
+    <color name="second_progress">#aa000000</color>
+    <color name="red">#cc0000</color>
+    <color name="green_succes">#45ff40</color>
+    <color name="blue_grey">#607d8b</color>
+    <color name="emphasis">#31b6e7</color>
+    <color name="tintBg">#AAFFFFFF</color>
+    <color name="light_gray">#8D8C81</color>
 </resources>
